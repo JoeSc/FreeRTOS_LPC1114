@@ -43,5 +43,6 @@ your application. */
 
 #define configKERNEL_INTERRUPT_PRIORITY			0 /* [dependent of processor] */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY	0 /* [dependent on processor and application] */
-
+/*Custom Defines after HERE*/
+#define INCLUDE_vPortUsedMem                1
 #endif /* FREERTOS_CONFIG_H */

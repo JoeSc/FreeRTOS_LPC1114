@@ -158,6 +158,33 @@ xBlockLink *pxFirstFreeBlock;														\
 }
 /*-----------------------------------------------------------*/
 
+#if ( INCLUDE_vPortUsedMem == 1 )
+
+void vPortUsedMem(int *bytesFree, int *bytesUsed, int *blocksFree)
+{
+  xBlockLink *pxBlock = &xStart;
+
+  *bytesFree = 0;
+  *bytesUsed = 0;
+  *blocksFree = 0;
+
+  vTaskSuspendAll();
+
+  while ((pxBlock) && (pxBlock != &xEnd))
+  {
+    *bytesFree += pxBlock->xBlockSize;
+    pxBlock = pxBlock->pxNextFreeBlock;
+    ++*blocksFree;
+  }
+
+  xTaskResumeAll();
+
+  *bytesUsed = configTOTAL_HEAP_SIZE - *bytesFree;
+}
+
+#endif
+
+
 void *pvPortMalloc( size_t xWantedSize )
 {
 xBlockLink *pxBlock, *pxPreviousBlock, *pxNewBlockLink;

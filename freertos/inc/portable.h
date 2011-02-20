@@ -320,6 +320,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 /*
  * Map to the memory management routines required for the port.
  */
+void vPortUsedMem(int *bytesFree, int *bytesUsed, int *blocksFree);
 void *pvPortMalloc( size_t xSize );
 void vPortFree( void *pv );
 void vPortInitialiseBlocks( void );
