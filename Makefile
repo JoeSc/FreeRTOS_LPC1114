@@ -2,8 +2,9 @@ include makedefs
 OUTFILE=firmware
 
 # Include all sub directories  use regex to exlude hidden dirs
-INCLUDEDIRS=$(shell find . \( ! -regex '.*/\..*' \) -type d)
-INCLUDE=$(addprefix -I, $(INCLUDEDIRS))
+INCLUDEDIRS=$(shell find * \( ! -regex '.*/\..*' \) -type d)
+INCLUDE=-I.
+INCLUDE+=$(addprefix -I, $(INCLUDEDIRS))
 
 CFLAGS+= $(INCLUDE)
 
