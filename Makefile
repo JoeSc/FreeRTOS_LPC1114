@@ -10,12 +10,15 @@ CFLAGS+= $(INCLUDE)
 CFLAGS+=-D'BAUDRATE=115200'
 
 VPATH=lpc1xxx:libs:core
+VPATH+=$(addprefix :, $(INCLUDEDIRS))
 
-OBJS=${OBJFOLDER}/main.o	\
-	  ${OBJFOLDER}/cpu_init.o \
-	  ${OBJFOLDER}/uart.o
+OBJFILES = main.o cpu_init.o uart.o core_cm0.o 
+OBJFILES +=port.o heap_2.o croutine.o list.o queue.o tasks.o 
+OBJFILES +=ledTask.o stack_checker.o uartTask.o
+OBJS = $(addprefix ${OBJFOLDER}/, $(OBJFILES))
 
 INIT_OBJS= ${OBJFOLDER}/LPC11xx_handlers.o ${OBJFOLDER}/LPC1xxx_startup.o
+
 
 ##########################################################################
 #LPC21ISP PROGRAMMING
@@ -27,7 +30,6 @@ LPC21ISP_XTAL = 12000
 LPC21ISP_FLASHFILE = $(OBJFOLDER)/$(OUTFILE).hex
 LPC21ISP_CONTROL = -control -RstDone
 LPC21ISP_OPTIONS = -verify -term 
-
 
 
 
@@ -82,8 +84,9 @@ term:
 # Print a variable
 ##########################################################################
 print:
-	@echo $(INCLUDEDIRS)
-
+	@echo "INCLUDE DIRS $(INCLUDEDIRS)\n"
+	@echo "OBJS $(OBJS)\n"
+	@echo "VPATH $(VPATH)\n"
 
 
 -include ${wildcard ${OBJFOLDER}/*.d} __dummy__
