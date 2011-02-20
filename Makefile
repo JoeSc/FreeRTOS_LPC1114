@@ -1,8 +1,12 @@
 include makedefs
 OUTFILE=firmware
 
+# Include all sub directories  use regex to exlude hidden dirs
+INCLUDEDIRS=$(shell find . \( ! -regex '.*/\..*' \) -type d)
+INCLUDE=$(addprefix -I, $(INCLUDEDIRS))
 
-CFLAGS+=-I . -I lpc1xxx -I libs -I core
+CFLAGS+= $(INCLUDE)
+
 CFLAGS+=-D'BAUDRATE=115200'
 
 VPATH=lpc1xxx:libs:core
@@ -73,6 +77,12 @@ term:
 	@echo '$(LPC21ISP) -termonly $(LPC21ISP_CONTROL) $(LPC21ISP_DEBUG) "$(CURDIR)/$(LPC21ISP_FLASHFILE)" $(LPC21ISP_PORT) $(LPC21ISP_BAUD) $(LPC21ISP_XTAL)' > debugcommand.txt
 	@chmod +x debugcommand.txt
 	@open -a terminal.app debugcommand.txt
+
+
+# Print a variable
+##########################################################################
+print:
+	@echo $(INCLUDEDIRS)
 
 
 
