@@ -74,13 +74,18 @@ program:all flash
 # Open a terminal using lpc21isp  This controls the bootloader so the
 # board is not stuck in reset
 ##########################################################################
-term:
+term: ${OBJFOLDER}
 	@echo "TERM lpc21isp"
 	@ps axc | grep lpc21isp >/dev/null; if [ $$? -eq 0 ] ; then killall lpc21isp ; fi		
-	@echo '$(LPC21ISP) -termonly $(LPC21ISP_CONTROL) $(LPC21ISP_DEBUG) "$(CURDIR)/$(LPC21ISP_FLASHFILE)" $(LPC21ISP_PORT) $(LPC21ISP_BAUD) $(LPC21ISP_XTAL)' > debugcommand.txt
-	@chmod +x debugcommand.txt
-	@open -a terminal.app debugcommand.txt
+	@echo '$(LPC21ISP) -termonly $(LPC21ISP_CONTROL) $(LPC21ISP_DEBUG) "$(CURDIR)/$(LPC21ISP_FLASHFILE)" $(LPC21ISP_PORT) $(LPC21ISP_BAUD) $(LPC21ISP_XTAL)' > $(OBJFOLDER)/debugcommand.txt
+	@chmod +x $(OBJFOLDER)/debugcommand.txt
+	@open -a terminal.app $(OBJFOLDER)/debugcommand.txt
 
+size:
+	@if [ -d objs ];\
+	 then\
+	  $(SIZE) $(OBJFOLDER)/*.o $(OBJFOLDER)/*.elf; \
+	 fi
 
 # Print a variable
 ##########################################################################
