@@ -5,7 +5,7 @@ OUTFILE=firmware
 CFLAGS+=-I . -I lpc1xxx -I libs -I core
 CFLAGS+=-D'BAUDRATE=115200'
 
-VPATH=libs:core:lpc1xxx
+VPATH=lpc1xxx:libs:core
 
 OBJS=${OBJFOLDER}/main.o	\
 	  ${OBJFOLDER}/cpu_init.o \
