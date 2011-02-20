@@ -1,0 +1,5 @@
+Setting up a development branch of FreeRTOS for the LPC1114 Cortex-m0 microcontroller.
+
+Will have functions for watching the heapsize and the stack usage
+
+
