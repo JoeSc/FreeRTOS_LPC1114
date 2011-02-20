@@ -1,0 +1,81 @@
+OBJFOLDER=objs
+#VERBOSE=1
+
+# Compiler and Flags
+#******************************************************************************
+CC= /usr/local/arm-cs-tools/bin/arm-none-eabi-gcc-4.4.1
+CFLAGS=-mthumb         \
+       -mcpu=cortex-m0 \
+       -Os             \
+	   -Wall		   \
+	   -ffunction-sections\
+	   -fdata-sections \
+	   -fmessage-length=0 \
+	   -fno-builtin \
+       -MD
+
+# Assembler Flags
+#******************************************************************************
+AFLAGS=-mthumb         \
+       -mcpu=cortex-m0 \
+       -MD
+
+# Linker and Flags
+#******************************************************************************
+LD=/usr/local/arm-cs-tools/bin/arm-none-eabi-gcc-4.4.1
+LDFLAGS= -nostartfiles -mcpu=cortex-m0 -mthumb -Wl,--gc-sections 
+LD_PATH = lpc1xxx
+LD_SCRIPT = $(LD_PATH)/linkscript.ld
+LD_FILE = $(LD_PATH)/memory.ld
+
+# OBJCOPY and Flags
+#******************************************************************************
+OBJCOPY=/usr/local/arm-cs-tools/bin/arm-none-eabi-objcopy
+OCFLAGS = --strip-unneeded
+
+# SIZE
+#******************************************************************************
+SIZE=/usr/local/arm-cs-tools/bin/arm-none-eabi-size
+
+# Build the objects from c source files
+#******************************************************************************
+${OBJFOLDER}/%.o: %.c
+	@if [ 'x${VERBOSE}' = x ];                               \
+	 then                                                    \
+	     echo "  CC    ${<}";                                \
+	 else                                                    \
+	     echo ${CC} ${CFLAGS} -o ${@} -c ${<}; \
+	 fi
+	@${CC} ${CFLAGS} -o ${@} -c ${<}
+
+# Build the objects from the assembly files
+#******************************************************************************
+${OBJFOLDER}/%.o: %.S
+	@if [ 'x${VERBOSE}' = x ];                               \
+	 then                                                    \
+	     echo "  CC    ${<}";                                \
+	 else                                                    \
+	     echo ${CC} ${AFLAGS} -o ${@} -c ${<}; \
+	 fi
+	@${CC} ${AFLAGS} -o ${@} -c ${<}
+
+# Link the objects into an elf file 
+# Print the size
+# output a hex file
+#******************************************************************************
+${OBJFOLDER}/%.elf:
+	@if [ 'x${VERBOSE}' = x ]; \
+	 then                      \
+	     echo "  LD    ${@}";  \
+	 fi
+	@if [ 'x${VERBOSE}' != x ];                           \
+	 then                                                 \
+	     echo ${LD} -T ${LD_FILE} 						  \
+	                ${LDFLAGS} -o ${@} ${^} -lm;               \
+	 fi
+	@${LD} -T ${LD_FILE} 						  \
+			${LDFLAGS} -o ${@} ${^} -lm
+	@${SIZE} ${@}
+	@echo "  OBJ    ${@:.elf=.hex}"
+	@${OBJCOPY} $(OCFLAGS) -O ihex ${@} ${@:.elf=.hex}
+
